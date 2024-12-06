@@ -1,4 +1,4 @@
-from dagster import asset   
+from dagster import asset ,AutomationCondition, AssetIn
 from urllib.request import urlretrieve
 from pathlib import Path
 
@@ -9,18 +9,17 @@ DATA_FOLDER = Path(__file__).parent / "data"
 
 
 @asset(
-        key_prefix="downloaded_data"
+    automation_condition=AutomationCondition.any_downstream_conditions()
 )
 def download_data():
     DATA_FOLDER.mkdir(exist_ok=True)
-    return urlretrieve(DATA_URL, DATA_FOLDER / "1000movies.csv")
+    return urlretrieve(DATA_URL, DATA_FOLDER / "1000movies.csv")[0]
 
 @asset(
-        deps=[download_data]
+    ins={"path_to_data": AssetIn(key=["download_data"])},
 )
-def read_data(downloaded_data):
-    print(downloaded_data)
-    df = pd.read_csv(DATA_FOLDER / "1000movies.csv")
+def read_data(path_to_data:Path):
+    df = pd.read_csv(path_to_data)
     print(df)
     return df
 
