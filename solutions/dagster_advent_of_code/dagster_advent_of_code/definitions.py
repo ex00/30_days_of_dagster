@@ -1,9 +1,9 @@
 from dagster import Definitions, load_assets_from_modules
 
-from dagster_advent_of_code import assets_quick_start, assets_day5 # noqa: TID252
+from dagster_advent_of_code import assets_quick_start, assets_day6 # noqa: TID252
     
 
-all_assets = load_assets_from_modules([assets_quick_start, assets_day5])
+all_assets = load_assets_from_modules([assets_quick_start, assets_day6])
 
 
 defs = Definitions(
